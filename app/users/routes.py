@@ -4,6 +4,12 @@ from app.users.controllers.UserController import UserController
 users = Blueprint('users', __name__)
 
 
+# Create User
+@users.route('/users', methods=['POST'])
+def create_user():
+    return UserController().create_user()
+
+
 # Get All Users
 @users.route('/users', methods=['GET'])
 def get_users():
