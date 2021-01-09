@@ -1,0 +1,1 @@
+from app.profiles.routes import profiles

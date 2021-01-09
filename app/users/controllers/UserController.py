@@ -1,25 +1,27 @@
 from flask import request, jsonify
 from app.users.models.User import User
-from app.users.schema import UserSchema
+from app.users.schema import user_schema, users_schema
 from app import db
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.errors import http_error
 from email_validator import validate_email, EmailNotValidError
+from app.profiles.models.Profile import Profile
 
 
 class UserController():
 
     def __init__(self):
         # Init Schema
-        self.user_schema = UserSchema()
-        self.users_schema = UserSchema(many=True)
+        self.user_schema = user_schema
+        self.users_schema = users_schema
+        self.profile = Profile()
 
     # Create User
     def create_user(self):
 
         user = User()
-
+        
         # Decode the request data
         data = request.data.decode('utf-8')
 
@@ -104,23 +106,28 @@ class UserController():
         if len(password) < 6:
            return http_error("The Password must be at least 6 characters!", 400)
         else:
-            user.password  = request.json['password']
+            password  = request.json['password']
             
-
         # Hash The Password
         user.password    = generate_password_hash(
-            request.json['password'], 
+            password, 
             method='sha256'
         )
 
-        user.is_admin    = False
-        user.is_active   = True
-        user.user_id   = str(uuid.uuid4())
+        user.user_public_id   = str(uuid.uuid4())
 
-        # Add the user to the database
+        # Create Profile Here....
+        self.profile.name  = "{} {}".format(user.first_name, user.last_name)
+        self.profile.profile_public_id =  str(uuid.uuid4())
+        self.profile.user       = user
+
+
+        # # Add the user to the database
         db.session.add(user)
         # Then commit the session
         db.session.commit()
+
+
         # Return Json Response to the client
         return self.user_schema.jsonify(user), 201
 
@@ -134,7 +141,7 @@ class UserController():
 
     # Get User
     def get_user(self, id):
-        user = User.query.filter_by(user_id=id).first()
+        user = User.query.filter_by(user_public_id=id).first()
         # Check if not the user
         if not user:
             return http_error("No User Found!", 404)

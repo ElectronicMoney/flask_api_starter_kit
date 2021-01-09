@@ -8,11 +8,12 @@ pylint = "*"
 
 [packages]
 flask = "*"
-flask-marshmallow = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
 python-dotenv = "*"
 email-validator = "*"
+flask-marshmallow = "*"
+marshmallow = "*"
 
 [requires]
 python_version = "3.7"

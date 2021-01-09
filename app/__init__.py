@@ -43,10 +43,13 @@ def error_handler(e):
 
 def create_app():
 
+    # Import All Modules Here....
     from app.users import users
+    from app.profiles import profiles
 
     # Register All The App Blueprints here
     app.register_blueprint(users)
+    app.register_blueprint(profiles)
 
     # Create The Database and all tables
     db.create_all()

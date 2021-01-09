@@ -4,7 +4,7 @@ from marshmallow import  INCLUDE
 
 
 # User Schema
-class UserSchema(ma.Schema):
+class ProfileSchema(ma.Schema):
 
     class Meta:
         # Include unknown fields in the deserialized output
@@ -12,18 +12,17 @@ class UserSchema(ma.Schema):
 
         # Fields to expose
         fields = (
-            'user_public_id',
-            'first_name', 
-            'last_name', 
-            'username', 
+            'profile_public_id',
+            'name', 
             'email', 
             'password',
             'is_admin',
             'is_active',
-            'created_at',
-            'updated_at'
+            'profile_created_at',
+            'profile_updated_at',
+            'profile_avatar'
             )
 
 
-user_schema  = UserSchema()
-users_schema = UserSchema(many=True)
+profile_schema  = ProfileSchema()
+profiles_schema = ProfileSchema(many=True)
