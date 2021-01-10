@@ -44,7 +44,7 @@ class AuthController():
         exp_date = datetime.datetime.utcnow() + datetime.timedelta(hours=24)
 
         payload = {
-            'auth': {
+            'user': {
                 'user_public_id': user.user_public_id
             },
             'exp': exp_date
