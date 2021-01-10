@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 import os
 from app.settings import SQLALCHEMY_TRACK_MODIFICATIONS
 from werkzeug.exceptions import HTTPException, default_exceptions
+from flask_migrate import Migrate
 
 
 # Init App
@@ -19,9 +20,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 # Init db
 db = SQLAlchemy(app)
 
+# Migration Manager
+migrate = Migrate(app, db)
+
 # Init Mashmallow
 ma = Marshmallow(app)
-
 
 # Handle All HTTPException
 @app.errorhandler(Exception)
@@ -54,7 +57,10 @@ def create_app():
     app.register_blueprint(auth)
 
     # Create The Database and all tables
-    db.create_all()
+    # db.create_all()
+    # Application-factory pattern
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     # Convert  All HTML Exceptions to Json Format
     for ex in default_exceptions:

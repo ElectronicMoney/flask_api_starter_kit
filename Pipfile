@@ -15,6 +15,8 @@ email-validator = "*"
 flask-marshmallow = "*"
 marshmallow = "*"
 pyjwt = "*"
+flask-migrate = "*"
+flask-script = "*"
 
 [requires]
 python_version = "3.7"

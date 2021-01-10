@@ -4,6 +4,7 @@ import os
 load_dotenv()
 
 
+HOST = os.getenv('HOST')
 PORT = os.getenv('PORT')
 DEBUG_STATUS = os.getenv("DEBUG_STATUS")
 
