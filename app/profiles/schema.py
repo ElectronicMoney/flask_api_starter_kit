@@ -15,7 +15,7 @@ class ProfileSchema(ma.Schema):
             'profile_public_id',
             'name', 
             'email', 
-            'password',
+            'username',
             'is_admin',
             'is_active',
             'profile_created_at',

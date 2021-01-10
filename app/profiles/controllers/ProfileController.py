@@ -38,7 +38,7 @@ class ProfileController():
             "profile_public_id": profile.profile_public_id,
             "profile_updated_at": profile.profile_updated_at,
             "email": profile.user.email,
-            "password": profile.user.password,
+            "username": profile.user.username,
             "is_admin": profile.user.is_admin,
             "is_active": profile.user.is_active
         })

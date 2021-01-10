@@ -14,6 +14,7 @@ python-dotenv = "*"
 email-validator = "*"
 flask-marshmallow = "*"
 marshmallow = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.7"

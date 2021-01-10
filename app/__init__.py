@@ -46,10 +46,12 @@ def create_app():
     # Import All Modules Here....
     from app.users import users
     from app.profiles import profiles
+    from app.auth import auth
 
     # Register All The App Blueprints here
     app.register_blueprint(users)
     app.register_blueprint(profiles)
+    app.register_blueprint(auth)
 
     # Create The Database and all tables
     db.create_all()

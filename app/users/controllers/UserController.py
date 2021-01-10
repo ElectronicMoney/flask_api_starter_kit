@@ -3,7 +3,7 @@ from app.users.models.User import User
 from app.users.schema import user_schema, users_schema
 from app import db
 import uuid
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from app.errors import http_error
 from email_validator import validate_email, EmailNotValidError
 from app.profiles.models.Profile import Profile

@@ -1,5 +1,6 @@
 from flask import Blueprint
 from app.profiles.controllers.ProfileController import ProfileController
+from app.auth.Auth import auth
 
 profiles = Blueprint('profiles', __name__)
 
@@ -12,5 +13,6 @@ def get_profiles():
 
 # Get A Profile
 @profiles.route('/profiles/<id>', methods=['GET'])
-def get_user(id):
+@auth
+def get_profile(id):
     return ProfileController().get_profile(id)
