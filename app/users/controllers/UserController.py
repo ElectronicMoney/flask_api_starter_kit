@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash
 from app.errors import http_error
 from email_validator import validate_email, EmailNotValidError
 from app.profiles.models.Profile import Profile
+from app.auth.Auth import auth
 
 
 class UserController():
@@ -131,13 +132,14 @@ class UserController():
         # Return Json Response to the client
         return self.user_schema.jsonify(user), 201
 
-
     # Get All Users
     def get_all_users(self):
+        # Check if the user is admin
+        if not auth().get('user').is_admin:
+            return http_error("You dont' have the permision to Access this resource", 403)
         all_users = User.query.all()
         all_users_result = self.users_schema.dump(all_users)
-        return jsonify(all_users_result)
-        
+        return jsonify(all_users_result)  
 
     # Get User
     def get_user(self, id):
@@ -145,45 +147,73 @@ class UserController():
         # Check if not the user
         if not user:
             return http_error("No User Found!", 404)
-
-        user_result = self.user_schema.dump(user)
-        return jsonify(user_result)
-
+        # Check if the authenticated user 
+        # is actually the owner of the resource or is_admin
+        if user == auth().get('user') or auth().get('user').is_admin:
+            user_result = self.user_schema.dump(user)
+            return jsonify(user_result)
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)
 
     # Update User
     def update_user(self, id):
         # get the user you want tot udate
-        user = User.query.filter_by(user_id=id).first()
+        user = User.query.filter_by(user_public_id=id).first()
 
         # Check if not the user
         if not user:
             return http_error("No User Found!", 404)
+
+        # Check if the authenticated user 
+        # is actually the owner of the resource or is_admin
+        if user == auth().get('user') or auth().get('user').is_admin:
     
-        user.first_name  = request.json['first_name']
-        user.last_name   = request.json['last_name']
-        user.email       = request.json['email']
-        user.username    = request.json['username']
+            # Decode the request data
+            data = request.data.decode('utf-8')
 
-        # Hash The Password
-        user.password    = generate_password_hash(
-            request.json['password'], 
-            method='sha256'
-            )
+            # Check if the first_name is in data
+            if 'first_name' in data and request.json['first_name'] != None:
+                user.first_name  = request.json['first_name']
 
-        user.is_admin    = False
-        user.is_active   = True
-        user.user_id   = str(uuid.uuid4())
-        
-        # Then commit the session
-        db.session.commit()
-        # Return Json Response to the client
-        return self.user_schema.jsonify(user)
+            # Check if the last_name is in data
+            if 'last_name' in data and  request.json['last_name'] != None:
+                user.last_name = request.json['last_name']
 
-
+            # Check if the username is in data
+            if 'username' in data and request.json['username'] != None and len(request.json['username']) >= 6:
+                user.username  = request.json['username']
+            
+            # Then commit the session
+            db.session.commit()
+            # Return Json Response to the client
+            return self.user_schema.jsonify(user)
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)
 
     # Delete User
     def delete_user(self, id):
-        user = User.query.query.filter_by(user_id=id).first()
-        db.session.delete(user)
-        db.session.commit()
-        return self.user_schema.jsonify(user)
+        user = User.query.filter_by(user_public_id=id).first()
+        # Check if the authenticated user 
+        # is actually the owner of the resource or is_admin
+        if user == auth().get('user') or auth().get('user').is_admin:
+
+            db.session.delete(user)
+            db.session.commit()
+            return self.user_schema.jsonify(user), 204
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)
+
+    # Promote User
+    def promote_user(self, id):
+        # Check if the authenticated user is_admin
+        if auth().get('user').is_admin:
+            # get the user you want to promote
+            user = User.query.filter_by(user_public_id=id).first()
+
+            user.is_admin  = True
+            # Then commit the session
+            db.session.commit()
+            # Return Json Response to the client
+            return self.user_schema.jsonify(user)
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)

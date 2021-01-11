@@ -36,6 +36,10 @@ class AuthController():
         if not user:
             return http_error("The Username or password is Incorrect!", 401)
 
+        # Check if the user is active
+        if not user.is_active:
+            return http_error("Authentication Error; Login Failed!", 401)
+
         # verify the password
         if not check_password_hash(user.password, password):
             return http_error("The Username or password is Incorrect!", 401)
