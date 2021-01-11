@@ -6,6 +6,7 @@ from app.errors import http_error
 from email_validator import validate_email, EmailNotValidError
 from app.profiles.schema import profile_schema, profiles_schema
 from app.profiles.models.Profile import Profile
+from app.auth.Auth import auth
 
 
 class ProfileController():
@@ -19,28 +20,30 @@ class ProfileController():
 
     # Get All Users
     def get_all_profiles(self):
+        # Check if the user is admin
+        if not auth().get('user').is_admin:
+            return http_error("You dont' have the permision to Access this resource", 403)
         all_profiles = Profile.query.all()
         all_profiles_result = self.profiles_schema.dump(all_profiles)
         return jsonify(all_profiles_result)
         
 
     # Get Profile
-    def get_profile(self, id):
-        profile = Profile.query.filter_by(profile_public_id=id).first()
-        # Check if not the profile
-        if not profile:
-            return http_error("No profile Found!", 404)
+    def get_profile(self):
+        # Check if the authenticated user 
+        # is actually the owner of the resource
+        user = auth().get('user')
 
         profile_result = self.profile_schema.dump({
-            "name": profile.name,
-            "profile_avatar": profile.profile_avatar,
-            "profile_created_at": profile.profile_created_at,
-            "profile_public_id": profile.profile_public_id,
-            "profile_updated_at": profile.profile_updated_at,
-            "email": profile.user.email,
-            "username": profile.user.username,
-            "is_admin": profile.user.is_admin,
-            "is_active": profile.user.is_active
+            "name": user.profile.name,
+            "profile_avatar": user.profile.profile_avatar,
+            "profile_created_at": user.profile.profile_created_at,
+            "profile_public_id": user.profile.profile_public_id,
+            "profile_updated_at": user.profile.profile_updated_at,
+            "email": user.email,
+            "username": user.username,
+            "is_admin": user.is_admin,
+            "is_active": user.is_active
         })
 
         return jsonify(profile_result)

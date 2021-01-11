@@ -7,13 +7,13 @@ profiles = Blueprint('profiles', __name__)
 
 # Get All profiles
 @profiles.route('/profiles', methods=['GET'])
+@check_auth
 def get_profiles():
     return ProfileController().get_all_profiles()
 
 
 # Get A Profile
-@profiles.route('/profiles/<id>', methods=['GET'])
+@profiles.route('/profile', methods=['GET'])
 @check_auth
-def get_profile(id):
-    # print("Current User Name: {}".format(auth().get('user').username))
-    return ProfileController().get_profile(id)
+def get_profile():
+    return ProfileController().get_profile()
