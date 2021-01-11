@@ -22,7 +22,7 @@ class User(db.Model):
     created_at = db.Column('created_at', db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column('updated_at', db.DateTime, nullable=False, default=datetime.utcnow)
 
-    profile    = db.relationship('Profile', uselist=False, backref=db.backref('user', lazy=True))
+    profile    = db.relationship('Profile', uselist=False, cascade="all, delete-orphan", backref=db.backref('user', lazy=True))
 
     def __repr__(self):
         return '<User %r>' % self.username
