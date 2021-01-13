@@ -17,3 +17,15 @@ def get_profiles():
 @check_auth
 def get_profile():
     return ProfileController().get_profile()
+
+# Upload Profile Picture
+@profiles.route('/profile/picture/upload', methods=['POST'])
+@check_auth
+def upload_profile_picture():
+    return ProfileController().upload_profile_picture()
+
+# Get A  Profile Picture
+@profiles.route('/profile/picture/<filename>', methods=['GET'])
+@check_auth
+def get_profile_picture(filename):
+    return ProfileController().get_profile_picture(filename)

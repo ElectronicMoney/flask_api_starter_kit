@@ -14,7 +14,7 @@ class Profile(db.Model):
 
     profile_id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    profile_avatar = db.Column(db.String(100), nullable=False, default="avatar.png")
+    profile_picture_url = db.Column(db.String(100), nullable=False, default="avatar.png")
     profile_public_id    = db.Column(db.String(62), unique=True, nullable=False)
     profile_created_at    = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     profile_updated_at    = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

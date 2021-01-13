@@ -20,7 +20,7 @@ class ProfileSchema(ma.Schema):
             'is_active',
             'profile_created_at',
             'profile_updated_at',
-            'profile_avatar'
+            'profile_picture_url'
             )
 
 
