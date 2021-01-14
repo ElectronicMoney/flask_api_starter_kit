@@ -7,10 +7,14 @@ from werkzeug.exceptions import HTTPException, default_exceptions
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
 from app.settings import UPLOAD_FOLDER
+from app.middlewares.AuthMiddleware import AuthMiddleware
 
 
 # Init App
 app = Flask(__name__)
+
+# Connect Middlewares with the app
+app.wsgi_app = AuthMiddleware(app.wsgi_app)
 
 # Upload Allowed File Extentions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
