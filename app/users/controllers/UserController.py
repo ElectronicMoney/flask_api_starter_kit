@@ -75,8 +75,6 @@ class UserController():
                 # email is not valid, exception message is human-readable
                 return http_error(str(e), 400)
         
-
-        
         # Check if the username is in data
         if 'username' in data:
             username  = request.json['username']
@@ -108,9 +106,19 @@ class UserController():
            return http_error("The Password must be at least 6 characters!", 400)
         else:
             password  = request.json['password']
+
+        # Confirm New Pasword
+        if 'confirm_password' in data:
+            confirm_password  = request.json['confirm_password']
+        else:
+            return http_error("The Confirm New Password is Required!", 400)
             
+        # Check if the confirm New Pasword is the same with the new password
+        if password != confirm_password:
+            return http_error("The Password and confirm password fields must be the same!", 400)
+          
         # Hash The Password
-        user.password    = generate_password_hash(
+        user.password = generate_password_hash(
             password, 
             method='sha256'
         )
