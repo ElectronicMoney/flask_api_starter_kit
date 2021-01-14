@@ -42,3 +42,15 @@ def delete_users(id):
 @check_auth
 def promote_user(id):
     return UserController().promote_user(id)
+
+# Activate A User
+@users.route('/users/activate/<id>', methods=['PUT'])
+@check_auth
+def activate_user(id):
+    return UserController().activate_user(id)
+
+# DeActivate A User
+@users.route('/users/deactivate/<id>', methods=['PUT'])
+@check_auth
+def de_activate_user(id):
+    return UserController().de_activate_user(id)

@@ -217,3 +217,35 @@ class UserController():
             return self.user_schema.jsonify(user)
         else:
             return http_error("You are Not Permited to access this resource!", 403)
+
+        # Promote User
+    
+    # Activate User
+    def activate_user(self, id):
+        # Check if the authenticated user is_admin
+        if auth().get('user').is_admin:
+            # get the user you want to promote
+            user = User.query.filter_by(user_public_id=id).first()
+
+            user.is_active  = True
+            # Then commit the session
+            db.session.commit()
+            # Return Json Response to the client
+            return self.user_schema.jsonify(user)
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)
+
+    # DeActivate User
+    def de_activate_user(self, id):
+        # Check if the authenticated user is_admin
+        if auth().get('user').is_admin:
+            # get the user you want to promote
+            user = User.query.filter_by(user_public_id=id).first()
+
+            user.is_active  = False
+            # Then commit the session
+            db.session.commit()
+            # Return Json Response to the client
+            return self.user_schema.jsonify(user)
+        else:
+            return http_error("You are Not Permited to access this resource!", 403)

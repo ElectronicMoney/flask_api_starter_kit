@@ -38,7 +38,7 @@ class AuthController():
 
         # Check if the user is active
         if not user.is_active:
-            return http_error("Authentication Error; Login Failed!", 401)
+            return http_error("Authentication Error; Your Account have been suspended!", 401)
 
         # verify the password
         if not check_password_hash(user.password, password):
