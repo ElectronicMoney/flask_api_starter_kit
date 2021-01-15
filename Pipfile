@@ -17,6 +17,7 @@ marshmallow = "*"
 pyjwt = "*"
 flask-migrate = "*"
 flask-script = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

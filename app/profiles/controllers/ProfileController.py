@@ -14,7 +14,7 @@ import os
 import uuid
 from flask import send_from_directory
 from app.settings import UPLOAD_FOLDER
-from app.settings import APP_URL
+from app.settings import API_URL
 
 
 class ProfileController():
@@ -84,7 +84,7 @@ class ProfileController():
                 user = auth().get('user') 
                 profile = user.profile 
                 # Create the Profile Url
-                profile_picture_url = "{}{}{}".format(APP_URL, '/profile/picture/', new_file_name)
+                profile_picture_url = "{}{}{}".format(API_URL, '/profile/picture/', new_file_name)
                 profile.profile_picture_url = profile_picture_url
 
                 # Then commit the session
