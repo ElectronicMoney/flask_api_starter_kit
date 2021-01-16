@@ -2,11 +2,18 @@ from flask import Flask, abort, jsonify, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
+
+from app.settings import DATABASE_HOST
+from app.settings import DATABASE_NAME
+from app.settings import DATABASE_PORT
+from app.settings import DATABASE_USER
+from app.settings import DATABASE_PASSWORD
 from app.settings import SQLALCHEMY_TRACK_MODIFICATIONS
+from app.settings import UPLOAD_FOLDER
+
 from werkzeug.exceptions import HTTPException, default_exceptions
 from flask_migrate import Migrate
 from werkzeug.utils import secure_filename
-from app.settings import UPLOAD_FOLDER
 from app.middlewares.AuthMiddleware import AuthMiddleware
 import click
 from flask.cli import with_appcontext
@@ -32,9 +39,20 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
 
-
 # Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'db.sqlite')
+# SQLLite Connections
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'db.sqlite')
+
+# Postgresql Connections
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@{}:{}/{}'.format(
+    DATABASE_USER, 
+    DATABASE_PASSWORD,
+    DATABASE_HOST,
+    DATABASE_PORT,
+    DATABASE_NAME
+)
+
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = SQLALCHEMY_TRACK_MODIFICATIONS
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
